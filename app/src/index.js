@@ -1,37 +1,56 @@
-const express = require('express')
-const promBundle = require("express-prom-bundle");
-const app = express()
+const express = require('express');
+const promBundle = require('express-prom-bundle');
+const app = express();
 
 const PORT = 3000;
 
-app.use(promBundle({
+app.use(
+  promBundle({
     includeMethod: true,
     includeStatusCode: true,
     includePath: true,
-    normalizePath: [
-        ['^/user/[0-9]*', '/user/#id'],
-    ]
-}));
+    normalizePath: [['^/user/[0-9]*', '/user/#id']],
+    promClient: {
+      collectDefaultMetrics: {},
+    },
+    formatStatusCode: (res) => {
+      const status = res.statusCode;
+      if (status >= 200 && status < 300) {
+        return '2XX';
+      }
+
+      if (status >= 300 && status < 400) {
+        return '3XX';
+      }
+
+      if (status >= 400 && status < 500) {
+        return '4XX';
+      }
+
+      return '5XX';
+    },
+  })
+);
 
 app.get('/', function (req, res) {
-  res.send('hello world from example app!')
-})
+  res.send('hello world from example app!');
+});
 
 app.get('/login', function (req, res) {
   res.json({
-      status: 200,
-      message: 'Succesful login!',
+    status: 200,
+    message: 'Succesful login!',
   });
-})
+});
 
 app.get('/user/:id', function (req, res) {
-    const userId = req.params.id;
-    res.json({
-        status: 200,
-        message: `Hello user [${userId}]`,
-    });
-})
+  const userId = req.params.id;
+  res.json({
+    status: 200,
+    message: `Hello user [${userId}]`,
+  });
+});
 
 app.listen(PORT, () => {
-    console.log(`App is listening on port ${PORT}`);
-})
+  console.log(`App is listening on port ${PORT}`);
+});
