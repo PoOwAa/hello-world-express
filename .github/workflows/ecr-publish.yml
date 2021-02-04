@@ -20,6 +20,18 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-3
 
+      - name: Get app version
+        run: node -p -e '`APP_VERSION=${require("./package.json").version}`' >> $GITHUB_ENV
+
+      - name: Git tag with version
+        uses: pkgdeps/git-tag-action@v2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_repo: ${{ github.repository }}
+          version: ${{ env.APP_VERSION }}
+          git_commit_sha: ${{ github.sha }}
+          git_tag_prefix: 'v'
+
       - name: Login to ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
@@ -28,7 +40,7 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: oz-webapp
-          IMAGE_TAG: latest
+          IMAGE_TAG: ${{ env.APP_VERSION }}
         run: |
           # Build a docker container and
           # push it to ECR so that it can
