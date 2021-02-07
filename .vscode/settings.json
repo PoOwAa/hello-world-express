@@ -1,0 +1,4 @@
+{
+  "jest.rootPath": "app",
+  "jest.autoEnable": true
+}
