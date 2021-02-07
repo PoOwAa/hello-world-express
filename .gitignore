@@ -1,12 +1,6 @@
 
-# Created by https://www.toptal.com/developers/gitignore/api/macos,node,code
-# Edit at https://www.toptal.com/developers/gitignore?templates=macos,node,code
-
-### Code ###
-.vscode/*
-!.vscode/tasks.json
-!.vscode/launch.json
-*.code-workspace
+# Created by https://www.toptal.com/developers/gitignore/api/macos,node
+# Edit at https://www.toptal.com/developers/gitignore?templates=macos,node
 
 ### macOS ###
 # General
