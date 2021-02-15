@@ -1,6 +1,7 @@
 const express = require('express');
 const promBundle = require('express-prom-bundle');
 const app = express();
+const helmet = require('helmet');
 
 const PORT = 3000;
 
@@ -31,6 +32,8 @@ app.use(
     },
   })
 );
+
+app.use(helmet());
 
 app.get('/', function (req, res) {
   res.send('hello world from example app!');
